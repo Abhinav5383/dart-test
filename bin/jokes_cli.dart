@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 
 const version = "0.1.0";
 const jokesApiUrl = "https://official-joke-api.appspot.com";
+const magic = "\x1B[1A\x1B[2K";
 
 Future<void> main(List<String> args) async {
   if (args.isNotEmpty && (args.first == "-v" || args.first == "--version")) {
@@ -12,10 +13,26 @@ Future<void> main(List<String> args) async {
     return;
   }
 
+  bool wantAnotherJoke = false;
+
+  do {
+    await tellJoke();
+
+    print("\nWant another joke? (y/n)");
+    final String answer = stdin.readLineSync()?.toLowerCase() ?? "";
+    wantAnotherJoke = answer.isEmpty ? false : answer[0] == 'y';
+  } while (wantAnotherJoke == true);
+}
+
+Future<void> tellJoke() async {
+  String loadingMsg = "\nLoading...";
+  print(loadingMsg);
+
   Joke joke = await fetchRandomJoke();
-  print(joke.setup);
+  stdout.write(magic);
+  print(joke.setup.padRight(loadingMsg.length));
   stdin.readLineSync();
-  stdout.write('\x1B[1A\x1B[2K'); // undo the \n written by readLineSync
+  stdout.write(magic); // undo the \n written by readLineSync
   print(joke.punchline);
 }
 
