@@ -1,2 +1,5 @@
-A sample command-line application with an entrypoint in `bin/`, library code
-in `lib/`, and example unit test in `test/`.
+A simple dart program that tells you jokes, as long as you keep saying yes!
+
+```sh
+dart run bin/jokes_cli.dark
+```
